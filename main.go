@@ -31,12 +31,44 @@ func getProducts(w http.ResponseWriter, r *http.Request) {
 	}
 
 }
+func createProductHandler(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json")
+	w.Header().Set("Access-Control-Allow-Origin", "*")
+	w.Header().Set("Access-Control-Allow-Methods", "POST, OPTIONS")
+	w.Header().Set("Access-Control-Allow-Headers", "Content-Type")
 
+	if r.Method == "OPTIONS" {
+		w.WriteHeader(http.StatusOK)
+		return
+	}
+
+	if r.Method != "POST" {
+		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
+		return
+	}
+	var newProduct Product
+	decoder := json.NewDecoder(r.Body)
+	err := decoder.Decode(&newProduct)				
+	if err != nil {
+		http.Error(w, "Error decoding product", http.StatusBadRequest)
+		return
+	}
+	newProduct.ID = len(products) + 1
+	products = append(products, newProduct)
+	w.WriteHeader(http.StatusCreated)	
+	encoder := json.NewEncoder(w)
+	err = encoder.Encode(newProduct)	
+	if err != nil {
+		http.Error(w, "Error encoding product", http.StatusInternalServerError)
+		return
+	}
+}
 func main() {
 	// Create a new router
 	mux := http.NewServeMux()
 	mux.HandleFunc("/hello", helloHandler)
-	mux.HandleFunc("/getProducts",getProducts)
+	mux.HandleFunc("/products",getProducts)
+	mux.HandleFunc("/create-product", createProductHandler)
 	// Start the server
 	fmt.Println("Server is running on :8080")
 	err := http.ListenAndServe(":8080", mux)

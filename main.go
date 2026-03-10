@@ -15,32 +15,47 @@ var products  []Product
 func helloHandler(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprintf(w, "Hello")
 }
-func getProducts(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Content-Type", "application/json")
-	w.Header().Set("Access-Control-Allow-Origin", "*")
-	if r.Method != "GET" {
-		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
-		return
+
+func corsHandler(w http.ResponseWriter){
+	
+		w.Header().Set("Access-Control-Allow-Origin", "*")
+		w.Header().Set("Access-Control-Allow-Methods", "GET, POST, OPTIONS, PUT, DELETE, PATCH")
+		w.Header().Set("Access-Control-Allow-Headers", "Content-Type")
+		w.Header().Set("Content-Type", "application/json")
+
 	}
 
-	encoder := json.NewEncoder(w)
-	err := encoder.Encode(products)
-	if err != nil {
-		http.Error(w, "Error encoding products", http.StatusInternalServerError)
-		return
-	}
-
-}
-func createProductHandler(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Content-Type", "application/json")
-	w.Header().Set("Access-Control-Allow-Origin", "*")
-	w.Header().Set("Access-Control-Allow-Methods", "POST, OPTIONS")
-	w.Header().Set("Access-Control-Allow-Headers", "Content-Type")
-
+func optionsHandler(w http.ResponseWriter, r *http.Request) {
 	if r.Method == "OPTIONS" {
 		w.WriteHeader(http.StatusOK)
 		return
 	}
+}
+
+func sendData(w http.ResponseWriter, data interface{}, statusCode int) {
+	encoder := json.NewEncoder(w)
+	err := encoder.Encode(data)
+	if err != nil {
+		http.Error(w, "Error encoding data", http.StatusInternalServerError)
+		return
+	}
+	w.WriteHeader(statusCode)
+}
+
+func getProducts(w http.ResponseWriter, r *http.Request) {
+	corsHandler(w)
+	optionsHandler(w, r)
+	
+	if r.Method != "GET" {
+		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
+		return
+	}
+	sendData(w, products, http.StatusOK)
+
+}
+func createProductHandler(w http.ResponseWriter, r *http.Request) {
+	corsHandler(w)
+	optionsHandler(w, r)
 
 	if r.Method != "POST" {
 		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
@@ -55,13 +70,8 @@ func createProductHandler(w http.ResponseWriter, r *http.Request) {
 	}
 	newProduct.ID = len(products) + 1
 	products = append(products, newProduct)
-	w.WriteHeader(http.StatusCreated)	
-	encoder := json.NewEncoder(w)
-	err = encoder.Encode(newProduct)	
-	if err != nil {
-		http.Error(w, "Error encoding product", http.StatusInternalServerError)
-		return
-	}
+	w.WriteHeader(http.StatusCreated)
+	sendData(w, newProduct, http.StatusCreated)
 }
 func main() {
 	// Create a new router

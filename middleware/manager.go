@@ -16,7 +16,7 @@ func NewManager() *Manager {
 	}
 }
 func (m *Manager) Use(middleware Middleware) {
-	m.globalMiddleware = append(m.globalMiddleware, Logger)
+	m.globalMiddleware = append(m.globalMiddleware, middleware)
 }
 func (m *Manager) With(next http.Handler) http.Handler {
 	for _, middleware := range m.globalMiddleware {

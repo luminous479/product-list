@@ -11,7 +11,7 @@ func Serve() {
 	manager := middleware.NewManager()
 	mux := http.NewServeMux()
 	manager.Use(middleware.Logger)
-	allRoutes(mux)
+	allRoutes(mux, manager)
 	router := router.GlobalRouter(mux)
 	// Start the server
 	fmt.Println("Server is running on :8080")

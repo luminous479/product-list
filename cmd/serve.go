@@ -3,18 +3,16 @@ package cmd
 import (
 	"fmt"
 	"net/http"
-	"github.com/luminous479/product-list/handler"
 	"github.com/luminous479/product-list/middleware"
 	"github.com/luminous479/product-list/router"
 )
 
 func Serve() {
+	manager := middleware.NewManager()
 	mux := http.NewServeMux()
-	mux.Handle("GET /products", middleware.Logger(http.HandlerFunc(handler.GetProducts)))
-	mux.Handle("POST /products", middleware.Logger(http.HandlerFunc(handler.CreateProductHandler)))
-	mux.Handle("GET /products/{productId}", middleware.Logger(http.HandlerFunc(handler.GetProductByID)))
+	manager.Use(middleware.Logger)
+	allRoutes(mux)
 	router := router.GlobalRouter(mux)
-
 	// Start the server
 	fmt.Println("Server is running on :8080")
 	err := http.ListenAndServe(":8080", router)

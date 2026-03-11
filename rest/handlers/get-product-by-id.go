@@ -1,9 +1,8 @@
-package handler
+package handlers
 
 import (
 	"net/http"
 	"strconv"
-
 	"github.com/luminous479/product-list/database"
 	"github.com/luminous479/product-list/utils"
 )

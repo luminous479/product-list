@@ -16,8 +16,7 @@ func CreateProductHandler(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Error decoding product", http.StatusBadRequest)
 		return
 	}
-	newProduct.ID = len(database.Products) + 1
-	database.Products = append(database.Products, newProduct)
+	database.AddProduct(newProduct)	
 	w.WriteHeader(http.StatusCreated)
 	utils.SendData(w, newProduct, http.StatusCreated)
 }

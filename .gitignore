@@ -1,0 +1,6 @@
+cmd/serve.go
+env/env.go
+cmd/routes.go   
+.env
+.mod
+.sum

@@ -1,13 +1,15 @@
 package handlers
 
 import (
+	
 	"net/http"
 	"strconv"
+
 	"github.com/luminous479/product-list/database"
 	"github.com/luminous479/product-list/utils"
 )
 
-func GetProductByID(w http.ResponseWriter, r *http.Request) {
+func UpdateProductHandler(w http.ResponseWriter, r *http.Request) {
 	// Extract the product ID from the URL path
 	productId := r.PathValue("id")
 	// Convert the ID string to an integer
@@ -16,10 +18,16 @@ func GetProductByID(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Invalid product ID", http.StatusBadRequest)
 		return
 	}
-	if data := database.GetProductByID(id); data != (database.Product{}) {
-		utils.SendData(w, database.GetProductByID(id), http.StatusOK)
+	// Decode the request body into a Product struct
+	updatedProduct := utils.DecodeProduct(r, w)
+	if (updatedProduct == database.Product{}) {
+		return 
+	}
+	updatedProduct.ID = id
+	// Update the product in the database
+	if data := database.UpdateProduct(id, updatedProduct); data != (database.Product{}) {
+		utils.SendData(w, data, http.StatusOK)
 		return
 	}
 	utils.SendData(w, "Product not found", http.StatusNotFound)
-
 }

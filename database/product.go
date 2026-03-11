@@ -27,7 +27,7 @@ func GetProductByID(id int) Product {
 	return Product{}
 }
 
-func updateProduct(id int, updatedProduct Product) Product {
+func UpdateProduct(id int, updatedProduct Product) Product {
 	for i, product := range products {
 		if product.ID == id {
 			products[i] = updatedProduct
@@ -36,7 +36,7 @@ func updateProduct(id int, updatedProduct Product) Product {
 	}
 	return Product{}
 }
-func deleteProduct(id int) Product {	
+func DeleteProduct(id int) Product {	
 	for i, product := range products {
 		if product.ID == id {
 			products = append(products[:i], products[i+1:]...)	

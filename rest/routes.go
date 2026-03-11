@@ -6,8 +6,7 @@ import (
 )
 
 func initRoutes(mux *http.ServeMux) {
-	mux.Handle("GET /hello", http.HandlerFunc(handlers.TestHandler))
 	mux.Handle("GET /products", http.HandlerFunc(handlers.GetProducts))
 	mux.Handle("POST /products", http.HandlerFunc(handlers.CreateProductHandler))
-	mux.Handle("GET /product/{productId}", http.HandlerFunc(handlers.GetProductByID))
+	mux.Handle("GET /product/{id}", http.HandlerFunc(handlers.GetProductByID))
 }

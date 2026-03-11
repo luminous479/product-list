@@ -1,7 +1,7 @@
 package handlers
 
 import (
-	
+	"encoding/json"
 	"net/http"
 	"strconv"
 
@@ -9,7 +9,7 @@ import (
 	"github.com/luminous479/product-list/utils"
 )
 
-func UpdateProductHandler(w http.ResponseWriter, r *http.Request) {
+func UpdateProduct(w http.ResponseWriter, r *http.Request) {
 	// Extract the product ID from the URL path
 	productId := r.PathValue("id")
 	// Convert the ID string to an integer
@@ -19,11 +19,12 @@ func UpdateProductHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	// Decode the request body into a Product struct
-	updatedProduct := utils.DecodeProduct(r, w)
-	if (updatedProduct == database.Product{}) {
-		return 
+	var updatedProduct database.Product
+	err = json.NewDecoder(r.Body).Decode(&updatedProduct)
+	if err != nil {
+		http.Error(w, "Error decoding product", http.StatusBadRequest)
+		return
 	}
-	updatedProduct.ID = id
 	// Update the product in the database
 	if data := database.UpdateProduct(id, updatedProduct); data != (database.Product{}) {
 		utils.SendData(w, data, http.StatusOK)

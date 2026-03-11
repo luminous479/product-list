@@ -28,6 +28,7 @@ func GetProductByID(id int) Product {
 }
 
 func UpdateProduct(id int, updatedProduct Product) Product {
+	updatedProduct.ID = id
 	for i, product := range products {
 		if product.ID == id {
 			products[i] = updatedProduct

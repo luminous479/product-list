@@ -1,6 +1,7 @@
 package handlers
 
 import (
+	"encoding/json"
 	"net/http"
 
 	"github.com/luminous479/product-list/database"
@@ -9,11 +10,14 @@ import (
 
 func CreateProductHandler(w http.ResponseWriter, r *http.Request) {
 
-	newProduct := utils.DecodeProduct(r, w)
-	if (newProduct == database.Product{}) {
+	var newProduct database.Product
+	err := json.NewDecoder(r.Body).Decode(&newProduct)
+	if err != nil {
+		http.Error(w, "Error decoding product", http.StatusBadRequest)
 		return
 	}
-	database.AddProduct(newProduct)
+
+	product := database.AddProduct(newProduct)
 	w.WriteHeader(http.StatusCreated)
-	utils.SendData(w, newProduct, http.StatusCreated)
+	utils.SendData(w, product, http.StatusCreated)
 }

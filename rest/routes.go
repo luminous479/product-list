@@ -9,4 +9,6 @@ func initRoutes(mux *http.ServeMux) {
 	mux.Handle("GET /products", http.HandlerFunc(handlers.GetProducts))
 	mux.Handle("POST /products", http.HandlerFunc(handlers.CreateProductHandler))
 	mux.Handle("GET /product/{id}", http.HandlerFunc(handlers.GetProductByID))
+	mux.Handle("PUT /product/{id}", http.HandlerFunc(handlers.UpdateProduct))
+	mux.Handle("DELETE /product/{id}", http.HandlerFunc(handlers.DeleteProduct))
 }

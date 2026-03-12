@@ -11,7 +11,7 @@ func StartServer( config env.Config) {
 	manager := middlewares.NewManager()
 	manager.Use(middlewares.Cors, middlewares.Preflight, middlewares.Logger)
 	mux := http.NewServeMux()
-	initRoutes(mux)
+	initRoutes(mux, manager)
 	// Start the server
     addr := fmt.Sprintf(":%d", config.HttpPort)
 	fmt.Println("Server is running on", addr)

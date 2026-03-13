@@ -4,12 +4,12 @@ import (
 	"fmt"
 	"net/http"
 	"github.com/luminous479/product-list/env"
-	"github.com/luminous479/product-list/rest/middlewares"
+	"github.com/luminous479/product-list/rest/middlewares/product"
 
 )
 func StartServer( config env.Config) {
-	manager := middlewares.NewManager()
-	manager.Use(middlewares.Cors, middlewares.Preflight, middlewares.Logger)
+	manager := product.NewManager()
+	manager.Use(product.Cors, product.Preflight, product.Logger)
 	mux := http.NewServeMux()
 	initRoutes(mux, manager)
 	// Start the server

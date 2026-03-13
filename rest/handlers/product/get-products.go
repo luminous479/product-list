@@ -1,4 +1,4 @@
-package producthandlers
+package product
 
 import (
 	"net/http"
@@ -6,6 +6,6 @@ import (
 	"github.com/luminous479/product-list/utils"
 )
 
-func GetProducts(w http.ResponseWriter, r *http.Request) {
+func (h *ProductHandler) GetProducts(w http.ResponseWriter, r *http.Request) {
 	utils.SendData(w, database.GetProducts(), http.StatusOK)
 }

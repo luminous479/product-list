@@ -1,4 +1,4 @@
-package producthandlers
+package product
 
 import (
 	"net/http"
@@ -7,16 +7,19 @@ import (
 	"github.com/luminous479/product-list/utils"
 )
 
-func DeleteProduct(w http.ResponseWriter, r *http.Request) {
+func (h *ProductHandler) GetProductByID(w http.ResponseWriter, r *http.Request) {
+	// Extract the product ID from the URL path
 	productId := r.PathValue("id")
+	// Convert the ID string to an integer
 	id, err := strconv.Atoi(productId)
 	if err != nil {
 		http.Error(w, "Invalid product ID", http.StatusBadRequest)
 		return
 	}
-	if data := database.DeleteProduct(id); data != (database.Product{}) {
-		utils.SendData(w, data, http.StatusOK)
+	if data := database.GetProductByID(id); data != (database.Product{}) {
+		utils.SendData(w, database.GetProductByID(id), http.StatusOK)
 		return
 	}
 	utils.SendData(w, "Product not found", http.StatusNotFound)
+
 }

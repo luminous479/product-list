@@ -1,4 +1,4 @@
-package jwtauthentication
+package middlewares
 
 import (
 	"crypto/hmac"
@@ -6,11 +6,9 @@ import (
 	"encoding/base64"
 	"net/http"
 	"strings"
-
-	"github.com/luminous479/product-list/env"
 )
 
-func JwtAuthenticationMiddleware(next http.Handler) http.Handler {
+func (m *Middlewares) JwtAuthentication(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 
 		header := r.Header.Get("Authorization")
@@ -37,8 +35,8 @@ func JwtAuthenticationMiddleware(next http.Handler) http.Handler {
 
 		message := jwtHeader + "." + jwtPayload
 
-		conf := env.GetConfig()
-		byteSecret := []byte(conf.JwtSecretKey)
+		
+		byteSecret := []byte(m.conf.JwtSecretKey)
 		bytemessage := []byte(message)
 
 		h := hmac.New(sha256.New, byteSecret)

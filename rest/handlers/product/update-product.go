@@ -1,4 +1,4 @@
-package producthandlers
+package product
 
 import (
 	"encoding/json"
@@ -9,7 +9,7 @@ import (
 	"github.com/luminous479/product-list/utils"
 )
 
-func UpdateProduct(w http.ResponseWriter, r *http.Request) {
+func (h *ProductHandler) UpdateProduct(w http.ResponseWriter, r *http.Request) {
 	// Extract the product ID from the URL path
 	productId := r.PathValue("id")
 	// Convert the ID string to an integer

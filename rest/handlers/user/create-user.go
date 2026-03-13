@@ -1,4 +1,4 @@
-package userhandlers
+package user
 
 import (
 	"encoding/json"
@@ -7,7 +7,7 @@ import (
 	"github.com/luminous479/product-list/utils"
 )
 
-func CreateUser(w http.ResponseWriter, r *http.Request) {
+func (h *UserHandler) CreateUser(w http.ResponseWriter, r *http.Request) {
 	var user database.User
 	err := json.NewDecoder(r.Body).Decode(&user)	
 	if err != nil {

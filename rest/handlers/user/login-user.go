@@ -1,11 +1,11 @@
-package userhandlers
+package user
 
 import (
 	"encoding/json"
 	"net/http"
 
 	"github.com/luminous479/product-list/database"
-	"github.com/luminous479/product-list/env"
+	"github.com/luminous479/product-list/config"
 	"github.com/luminous479/product-list/utils"
 )
 
@@ -14,7 +14,7 @@ type loginRequest struct {
 	Password string `json:"pass"`
 }
 
-func LoginUser(w http.ResponseWriter, r *http.Request) {
+func (h *UserHandler) LoginUser(w http.ResponseWriter, r *http.Request) {
 	var loginReq loginRequest
 	err := json.NewDecoder(r.Body).Decode(&loginReq)
 	if err != nil {
@@ -26,7 +26,7 @@ func LoginUser(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Invalid credentials", http.StatusUnauthorized)
 		return
 	}
-	conf := env.GetConfig()
+	conf := config.GetConfig()
 
 	accessToken, err := utils.CreateJwt(conf.JwtSecretKey, utils.PayLoad{
 		Sub:         user.ID,

@@ -5,13 +5,14 @@ import (
 	"net/http"
 
 	"github.com/luminous479/product-list/database"
+	"github.com/luminous479/product-list/env"
 	"github.com/luminous479/product-list/utils"
 )
 
 type loginRequest struct {
-		Email string `json:"email"`
-		Password string `json:"pass"`
-	}
+	Email    string `json:"email"`
+	Password string `json:"pass"`
+}
 
 func LoginUser(w http.ResponseWriter, r *http.Request) {
 	var loginReq loginRequest
@@ -20,10 +21,22 @@ func LoginUser(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Invalid request body", http.StatusBadRequest)
 		return
 	}
-    user := database.GetUserByEmail(loginReq.Email)
+	user := database.GetUserByEmail(loginReq.Email)
 	if user == nil || user.Password != loginReq.Password {
 		http.Error(w, "Invalid credentials", http.StatusUnauthorized)
 		return
 	}
-	utils.SendData(w,user,http.StatusOK)
+	conf := env.GetConfig()
+
+	accessToken, err := utils.CreateJwt(conf.JwtSecretKey, utils.PayLoad{
+		Sub:         user.ID,
+		Name:        user.Name,
+		Email:       user.Email,
+		IsShopOwner: user.IsShopOwner,
+	})
+	if err != nil {
+		http.Error(w, "Error creating access token", http.StatusInternalServerError)
+		return
+	}
+	utils.SendData(w, accessToken, http.StatusOK)
 }

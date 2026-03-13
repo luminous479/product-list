@@ -1,7 +1,8 @@
 package main
 
 import (
-	"encoding/base64"
+	"crypto/sha256"
+	
 	"fmt"
 )
 
@@ -9,21 +10,11 @@ import (
 
 func main() {
 	//cmd.Serve()
-	s := "abc"
-	byteArr := []byte(s)
 
-	enc := base64.URLEncoding
-	enc = enc.WithPadding(base64.NoPadding)
-	b64Str := enc.EncodeToString(byteArr)
-    fmt.Println("Byte array : ",byteArr)
-	fmt.Println("Base 64 : ",b64Str)
-	// decoding base 64 
-    
-	dec, err := enc.DecodeString(b64Str)
+	// sha - 256
+	data := []byte("Hello World!")
+	hash := sha256.Sum256(data)
+	fmt.Println("Hash after SHA-256 : ", hash)
+	
 
-	if err != nil{
-		fmt.Println("failed to decode string")
-	}else{
-		fmt.Println(dec)
-	}
 }

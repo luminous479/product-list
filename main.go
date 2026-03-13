@@ -1,10 +1,10 @@
 package main
 
 import (
-	"crypto/hmac"
-	"crypto/sha256"
 
 	"fmt"
+
+	"github.com/luminous479/product-list/utils"
 )
 
 //"github.com/luminous479/product-list/cmd"
@@ -14,15 +14,17 @@ func main() {
 
 	// hmac-sha-256
 
-	secret := []byte("my-secret")
-	msg := []byte("hello world!")
 
-	h := hmac.New(sha256.New,secret)
-	h.Write(msg)
+token , err := utils.CreateJwt("my-secret",utils.PayLoad{
+	Sub: 28,
+	Name: "Akhi",
+	Email: "akhi@example.com",
+	IsShopOwner: true,
+})	
+if err != nil {
+	fmt.Println("Error creating JWT:", err)
+	return
 
-	text := h.Sum(nil)
-	fmt.Println(text)
-
-	
-
+}
+fmt.Println("Generated JWT:", token)
 }

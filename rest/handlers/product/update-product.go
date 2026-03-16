@@ -25,6 +25,7 @@ func (h *ProductHandler) UpdateProduct(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Error decoding product", http.StatusBadRequest)
 		return
 	}
+	updatedProduct.ID = id
 	// Update the product in the database
 	if data := database.UpdateProduct(id, updatedProduct); data != (database.Product{}) {
 		utils.SendData(w, data, http.StatusOK)

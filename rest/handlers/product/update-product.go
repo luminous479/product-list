@@ -38,9 +38,13 @@ func (h *ProductHandler) UpdateProduct(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Update the product in the database
-	if data:= h.productRepo.Update(updatedProduct); err == nil {
-		utils.SendData(w, data, http.StatusOK)
+
+	 data := h.productRepo.Update(updatedProduct)
+	 if data == nil {
+		utils.SendData(w, "Invalid product credentials", http.StatusNotFound)
 		return
-	}
-	utils.SendData(w, "Product not found", http.StatusNotFound)
+	 }
+		utils.SendData(w, data, http.StatusOK)
+	
+
 }

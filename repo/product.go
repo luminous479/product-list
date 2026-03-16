@@ -12,7 +12,7 @@ type ProductRepo interface {
 	Create(p Product) (*Product, error)
 	Get(id int) (*Product, error)
 	List() ([]*Product, error)
-	Update(p Product) error
+	Update(p Product) *Product
 	Delete(id int) (*Product, error)
 }
 
@@ -55,16 +55,16 @@ func (r *productRepo) List() ([]*Product, error) {
 	return list, nil
 }
 
-func (r *productRepo) Update(p Product) error {
+func (r *productRepo) Update(p Product) (*Product) {
 
 	for i := range r.products {
 		if r.products[i].ID == p.ID {
 			r.products[i] = p
-			return nil
+			return &r.products[i]
 		}
 	}
 
-	return errors.New("product not found")
+	return nil
 }
 
 func (r *productRepo) Delete(id int) (*Product, error) {

@@ -3,7 +3,6 @@ package product
 import (
 	"net/http"
 	"strconv"
-	"github.com/luminous479/product-list/database"
 	"github.com/luminous479/product-list/utils"
 )
 
@@ -16,8 +15,8 @@ func (h *ProductHandler) GetProductByID(w http.ResponseWriter, r *http.Request) 
 		http.Error(w, "Invalid product ID", http.StatusBadRequest)
 		return
 	}
-	if data := database.GetProductByID(id); data != (database.Product{}) {
-		utils.SendData(w, database.GetProductByID(id), http.StatusOK)
+	if data, err := h.productRepo.Get(id); err == nil {
+		utils.SendData(w, data, http.StatusOK)
 		return
 	}
 	utils.SendData(w, "Product not found", http.StatusNotFound)

@@ -2,10 +2,15 @@ package product
 
 import (
 	"net/http"
-	"github.com/luminous479/product-list/database"
 	"github.com/luminous479/product-list/utils"
 )
 
 func (h *ProductHandler) GetProducts(w http.ResponseWriter, r *http.Request) {
-	utils.SendData(w, database.GetProducts(), http.StatusOK)
+
+	if data, err := h.productRepo.List(); err == nil {
+		utils.SendData(w, data, http.StatusOK)
+		return
+	}
+	utils.SendData(w, "No products found", http.StatusNotFound)
+
 }

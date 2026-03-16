@@ -5,9 +5,14 @@ import (
 	"net/http"
 	"strconv"
 
-	"github.com/luminous479/product-list/database"
+	"github.com/luminous479/product-list/repo"
 	"github.com/luminous479/product-list/utils"
 )
+
+type RequestUpdateProduct struct {
+	Name  string  `json:"name"`
+	Price float64 `json:"price"`
+}
 
 func (h *ProductHandler) UpdateProduct(w http.ResponseWriter, r *http.Request) {
 	// Extract the product ID from the URL path
@@ -19,15 +24,21 @@ func (h *ProductHandler) UpdateProduct(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	// Decode the request body into a Product struct
-	var updatedProduct database.Product
-	err = json.NewDecoder(r.Body).Decode(&updatedProduct)
+	var req RequestUpdateProduct
+	err = json.NewDecoder(r.Body).Decode(&req)
 	if err != nil {
 		http.Error(w, "Error decoding product", http.StatusBadRequest)
 		return
 	}
-	updatedProduct.ID = id
+
+	updatedProduct := repo.Product{
+		ID:    id,
+		Name:  req.Name,
+		Price: req.Price,
+	}
+
 	// Update the product in the database
-	if data := database.UpdateProduct(id, updatedProduct); data != (database.Product{}) {
+	if data:= h.productRepo.Update(updatedProduct); err == nil {
 		utils.SendData(w, data, http.StatusOK)
 		return
 	}

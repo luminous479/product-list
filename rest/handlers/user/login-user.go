@@ -3,9 +3,6 @@ package user
 import (
 	"encoding/json"
 	"net/http"
-
-	"github.com/luminous479/product-list/database"
-	"github.com/luminous479/product-list/config"
 	"github.com/luminous479/product-list/utils"
 )
 
@@ -21,14 +18,13 @@ func (h *UserHandler) LoginUser(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Invalid request body", http.StatusBadRequest)
 		return
 	}
-	user := database.GetUserByEmail(loginReq.Email)
-	if user == nil || user.Password != loginReq.Password {
-		http.Error(w, "Invalid credentials", http.StatusUnauthorized)
+	user, err := h.userRepo.Find(loginReq.Email)
+	if err != nil {
+		utils.SendData(w, "User not found", http.StatusUnauthorized)
 		return
 	}
-	conf := config.GetConfig()
 
-	accessToken, err := utils.CreateJwt(conf.JwtSecretKey, utils.PayLoad{
+	accessToken, err := utils.CreateJwt(h.config.JwtSecretKey, utils.PayLoad{
 		Sub:         user.ID,
 		Name:        user.Name,
 		Email:       user.Email,

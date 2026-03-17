@@ -2,20 +2,28 @@ package db
 
 import (
 	"fmt"
-
 	"github.com/jmoiron/sqlx"
+	"github.com/luminous479/product-list/config"
 )
 
-func GetConnectionString() string {
-	return "user=postgres password=89890 host=localhost dbname=productlist sslmode=disable"
+func GetConnectionString(conf *config.DBConfig) string {
+
+	conString := fmt.Sprintf("user=%s password=%s host=%s port=%d dbname=%s",
+		conf.User, conf.Password, conf.Host, conf.Port, conf.Name)
+
+	if !conf.EnableSSLMODE {
+		return conString + " sslmode=disable"
+	}
+
+	return conString
 }
 
-func NewConnection() (*sqlx.DB, error){
-	dbSource := GetConnectionString()
-	dbCon , err := sqlx.Connect("postgres",dbSource)
+func NewConnection(conf *config.DBConfig) (*sqlx.DB, error) {
+	dbSource := GetConnectionString(conf)
+	dbCon, err := sqlx.Connect("postgres", dbSource)
 	if err != nil {
 		fmt.Println(err)
 		return nil, err
 	}
-  return  dbCon, nil
+	return dbCon, nil
 }

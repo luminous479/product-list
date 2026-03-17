@@ -18,7 +18,7 @@ func (h *UserHandler) LoginUser(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Invalid request body", http.StatusBadRequest)
 		return
 	}
-	user, err := h.userRepo.Find(loginReq.Email)
+	user, err := h.userRepo.Find(loginReq.Email, loginReq.Password)
 	if err != nil {
 		utils.SendData(w, "User not found", http.StatusUnauthorized)
 		return

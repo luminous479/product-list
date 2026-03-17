@@ -11,6 +11,7 @@ import (
 	"github.com/luminous479/product-list/rest/handlers/product"
 	"github.com/luminous479/product-list/rest/handlers/user"
 	"github.com/luminous479/product-list/rest/middlewares"
+	_ "github.com/lib/pq"
 )
 
 func Serve() {
@@ -25,9 +26,9 @@ func Serve() {
 	}
 
 	middlewares := middlewares.NewMiddlewares(config)
-	productRepo := repo.NewProductRepo()
+	productRepo := repo.NewProductRepo(dbCon)
 	productHandler := product.NewProductHandler(middlewares, productRepo)
-	userRepo := repo.NewUserRepo()
+	userRepo := repo.NewUserRepo(dbCon)
 	userHandler := user.NewUserHandler(userRepo, config)
 	rest.NewServer(productHandler, userHandler, *config).StartServer()
 

@@ -5,7 +5,7 @@ import (
 	"net/http"
 	"strconv"
 
-	"github.com/luminous479/product-list/repo"
+	"github.com/luminous479/product-list/domain"
 	"github.com/luminous479/product-list/utils"
 )
 
@@ -31,7 +31,7 @@ func (h *ProductHandler) UpdateProduct(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	updatedProduct := repo.Product{
+	updatedProduct := domain.Product{
 		ID:    id,
 		Name:  req.Name,
 		Price: req.Price,
@@ -39,7 +39,7 @@ func (h *ProductHandler) UpdateProduct(w http.ResponseWriter, r *http.Request) {
 
 	// Update the product in the database
 
-	 data, err := h.productRepo.Update(updatedProduct)
+	 data, err := h.svc.Update(updatedProduct)
 	 if data == nil {
 		utils.SendData(w, "Invalid product credentials", http.StatusNotFound)
 		return

@@ -7,7 +7,7 @@ import (
 
 func (h *ProductHandler) GetProducts(w http.ResponseWriter, r *http.Request) {
 
-	if data, err := h.productRepo.List(); err == nil {
+	if data, err := h.svc.List(); err == nil {
 		utils.SendData(w, data, http.StatusOK)
 		return
 	}

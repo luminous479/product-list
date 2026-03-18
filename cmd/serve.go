@@ -13,6 +13,7 @@ import (
 	UserHandler "github.com/luminous479/product-list/rest/handlers/user"
 	"github.com/luminous479/product-list/rest/middlewares"
 	"github.com/luminous479/product-list/user"
+	"github.com/luminous479/product-list/product"
 )
 
 func Serve() {
@@ -30,7 +31,8 @@ func Serve() {
 	userRepo := repo.NewUserRepo(dbCon)
 	//domains
 	 userSvc := user.NewService(userRepo)
-	productHandler := productHandler.NewProductHandler(middlewares, productRepo)
+	 productsvc := product.NewService(productRepo)
+	productHandler := productHandler.NewProductHandler(productsvc,middlewares)
 	userHandler := UserHandler.NewUserHandler(userSvc, config)
 	rest.NewServer(productHandler, userHandler, *config).StartServer()
 

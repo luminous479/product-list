@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 	"net/http"
 
-	"github.com/luminous479/product-list/repo"
+	"github.com/luminous479/product-list/domain"
 	"github.com/luminous479/product-list/utils"
 )
 
@@ -21,7 +21,7 @@ func (h *ProductHandler) CreateProductHandler(w http.ResponseWriter, r *http.Req
 		return
 	}
 
-	product, err := h.productRepo.Create(repo.Product{
+	product, err := h.svc.Create(domain.Product{
 		Name:  req.Name,
 		Price: req.Price,
 	})

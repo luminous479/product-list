@@ -1,15 +1,8 @@
 package product
 
-import (
-	"github.com/luminous479/product-list/domain"
-	productHandler "github.com/luminous479/product-list/rest/handlers/product"
-)
+import "github.com/luminous479/product-list/domain"
 
 type Service interface {
-	productHandler.Service
-}
-
-type ProductRepo interface {
 	Create(p domain.Product) (*domain.Product, error)
 	Get(id int) (*domain.Product, error)
 	List() ([]*domain.Product, error)

@@ -15,7 +15,7 @@ func (h *ProductHandler) GetProductByID(w http.ResponseWriter, r *http.Request) 
 		http.Error(w, "Invalid product ID", http.StatusBadRequest)
 		return
 	}
-	if data, _ := h.productRepo.Get(id);  data != nil {
+	if data, _ := h.svc.Get(id);  data != nil {
 		utils.SendData(w, data, http.StatusOK)
 		return
 	}

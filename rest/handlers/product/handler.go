@@ -1,18 +1,19 @@
 package product
 
 import (
-	"github.com/luminous479/product-list/repo"
+
 	"github.com/luminous479/product-list/rest/middlewares"
 )
 
 type ProductHandler struct {
 	middlewares *middlewares.Middlewares
-	productRepo repo.ProductRepo
+	svc Service
 }
 
-func NewProductHandler(middlewares *middlewares.Middlewares, productRepo repo.ProductRepo) *ProductHandler {
+func NewProductHandler(svc Service, middlewares *middlewares.Middlewares) *ProductHandler {
 	return &ProductHandler{
+		svc: svc,
 		middlewares: middlewares,
-		productRepo: productRepo,
+		
 	}
 }

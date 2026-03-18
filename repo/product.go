@@ -6,19 +6,16 @@ import (
 	"fmt"
 
 	"github.com/jmoiron/sqlx"
+	"github.com/luminous479/product-list/domain"
 )
 
-type Product struct {
-	ID    int     `json:"id" db:"id"`
-	Name  string  `json:"name" db:"name"`
-	Price float64 `json:"price" db:"price"`
-}
+
 
 type ProductRepo interface {
-	Create(p Product) (*Product, error)
-	Get(id int) (*Product, error)
-	List() ([]*Product, error)
-	Update(p Product) (*Product, error)
+	Create(p domain.Product) (*domain.Product, error)
+	Get(id int) (*domain.Product, error)
+	List() ([]*domain.Product, error)
+	Update(p domain.Product) (*domain.Product, error)
 	Delete(id int) error
 }
 
@@ -30,7 +27,7 @@ func NewProductRepo(db *sqlx.DB) ProductRepo {
 	return &productRepo{db: db}
 }
 
-func (r *productRepo) Create(p Product) (*Product, error) {
+func (r *productRepo) Create(p domain.Product) (*domain.Product, error) {
 
 	query := `INSERT INTO products (name, price) VALUES ($1, $2) RETURNING id`
 
@@ -42,11 +39,11 @@ func (r *productRepo) Create(p Product) (*Product, error) {
 	return &p, nil
 }
 
-func (r *productRepo) Get(id int) (*Product, error) {
+func (r *productRepo) Get(id int) (*domain.Product, error) {
 
 	query := `SELECT id, name, price FROM products WHERE id = $1`
 
-	var product Product
+	var product domain.Product
 
 	err := r.db.Get(&product, query, id)
 	if err != nil {
@@ -59,9 +56,9 @@ func (r *productRepo) Get(id int) (*Product, error) {
 	return &product, nil
 }
 
-func (r *productRepo) List() ([]*Product, error) {
+func (r *productRepo) List() ([]*domain.Product, error) {
 
-	var list []*Product
+	var list []*domain.Product
 	query := `SELECT id, name, price FROM products`
 
 	err := r.db.Select(&list, query)
@@ -72,7 +69,7 @@ func (r *productRepo) List() ([]*Product, error) {
 	return list, nil
 }
 
-func (r *productRepo) Update(p Product) (*Product, error) {
+func (r *productRepo) Update(p domain.Product) (*domain.Product, error) {
 
 	query := `UPDATE products SET name=$1, price=$2 WHERE id=$3`
 

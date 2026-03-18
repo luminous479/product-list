@@ -3,7 +3,8 @@ package user
 import (
 	"encoding/json"
 	"net/http"
-	"github.com/luminous479/product-list/repo"
+
+	"github.com/luminous479/product-list/domain"
 	"github.com/luminous479/product-list/utils"
 )
 
@@ -21,7 +22,7 @@ func (h *UserHandler) CreateUser(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Invalid request payload", http.StatusBadRequest)
 		return
 	}
-	user, err :=  h.userRepo.Create(repo.User{
+	user, err :=  h.svc.Create(domain.User{
 		Name:		Request.Name,
 		Email:		Request.Email,
 		Password:	Request.Password,

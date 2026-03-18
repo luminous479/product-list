@@ -2,17 +2,16 @@ package user
 
 import (
 	"github.com/luminous479/product-list/config"
-	"github.com/luminous479/product-list/repo"
 )
 
 type UserHandler struct {
-	userRepo repo.UserRepo
     config   *config.Config
+	svc Service
 }
 
-func NewUserHandler(userRepo repo.UserRepo, config *config.Config) *UserHandler {
+func NewUserHandler(svc Service, config *config.Config) *UserHandler {
 	return &UserHandler{
-		userRepo: userRepo,
+		svc: svc,
 		config:   config,
 	}
 }

@@ -4,18 +4,13 @@ import (
 	"database/sql"
 
 	"github.com/jmoiron/sqlx"
+	"github.com/luminous479/product-list/domain"
 )
 
-type User struct {
-	ID          int    `json:"id" db:"id"`
-	Name        string `json:"name" db:"name"`
-	Email       string `json:"email" db:"email"`
-	Password    string `json:"pass" db:"password"`
-	IsShopOwner bool   `json:"is_shop_owner" db:"is_shop_owner"`
-}
+
 type UserRepo interface {
-	Create(u User) (*User, error)
-	Find(email,pass string) (*User, error)
+	Create(u domain.User) (*domain.User, error)
+	Find(email,pass string) (*domain.User, error)
 }
 type userRepo struct {
 	db *sqlx.DB
@@ -28,7 +23,7 @@ func NewUserRepo(db *sqlx.DB) UserRepo {
 
 }
 
-func (r *userRepo) Create(u User) (*User, error) {
+func (r *userRepo) Create(u domain.User) (*domain.User, error) {
 
 	query := `
 	INSERT INTO users (name, email, password, is_shop_owner)
@@ -51,7 +46,7 @@ func (r *userRepo) Create(u User) (*User, error) {
 	return &u, nil
 }
 
-func (r *userRepo) Find(email, pass string) (*User, error) {
+func (r *userRepo) Find(email, pass string) (*domain.User, error) {
 
 	query := `
 	SELECT id, name, email, password, is_shop_owner
@@ -59,7 +54,7 @@ func (r *userRepo) Find(email, pass string) (*User, error) {
 	WHERE email=$1 AND password=$2
 	`
 
-	var user User
+	var user domain.User
 
 	err := r.db.Get(&user, query, email, pass)
 	if err != nil {

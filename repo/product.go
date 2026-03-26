@@ -17,6 +17,7 @@ type ProductRepo interface {
 	List(page int, limit int) ([]*domain.Product, error)
 	Update(p domain.Product) (*domain.Product, error)
 	Delete(id int) error
+    Count() (int64,error)
 }
 
 type productRepo struct {
@@ -115,4 +116,15 @@ func (r *productRepo) Delete(id int) error {
 	}
 
 	return nil
+}
+func (r *productRepo) Count() (int64, error) {
+	query := `SELECT COUNT(*) FROM products`
+
+	var total int64
+	err := r.db.QueryRow(query).Scan(&total)
+	if err != nil {
+		return 0, err
+	}
+
+	return total, nil
 }

@@ -72,3 +72,13 @@ func (svc *service) Delete(id int) error {
 	return nil
 
 }
+func (svc *service) Count() (int64, error) {
+
+	total, err := svc.productRepo.Count()
+
+	if err != nil{
+       return 0, err
+	}
+
+   return total, nil
+}

@@ -37,8 +37,8 @@ func (svc *service) Get(id int) (*domain.Product, error) {
 	return pro, nil
 
 }
-func (svc *service) List() ([]*domain.Product, error) {
-	list, err := svc.productRepo.List()
+func (svc *service) List(page int, limit int) ([]*domain.Product, error) {
+	list, err := svc.productRepo.List(page,limit)
 
 	if err != nil {
 		return nil, err

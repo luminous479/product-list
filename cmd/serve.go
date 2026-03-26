@@ -7,13 +7,13 @@ import (
 	_ "github.com/lib/pq"
 	"github.com/luminous479/product-list/config"
 	"github.com/luminous479/product-list/infra/db"
+	"github.com/luminous479/product-list/product"
 	"github.com/luminous479/product-list/repo"
 	"github.com/luminous479/product-list/rest"
 	productHandler "github.com/luminous479/product-list/rest/handlers/product"
 	UserHandler "github.com/luminous479/product-list/rest/handlers/user"
 	"github.com/luminous479/product-list/rest/middlewares"
 	"github.com/luminous479/product-list/user"
-	"github.com/luminous479/product-list/product"
 )
 
 func Serve() {
@@ -30,9 +30,9 @@ func Serve() {
 	productRepo := repo.NewProductRepo(dbCon)
 	userRepo := repo.NewUserRepo(dbCon)
 	//domains
-	 userSvc := user.NewService(userRepo)
-	 productsvc := product.NewService(productRepo)
-	productHandler := productHandler.NewProductHandler(productsvc,middlewares)
+	userSvc := user.NewService(userRepo)
+	productsvc := product.NewService(productRepo)
+	productHandler := productHandler.NewProductHandler(productsvc, middlewares)
 	userHandler := UserHandler.NewUserHandler(userSvc, config)
 	rest.NewServer(productHandler, userHandler, *config).StartServer()
 

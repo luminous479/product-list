@@ -14,7 +14,7 @@ import (
 type ProductRepo interface {
 	Create(p domain.Product) (*domain.Product, error)
 	Get(id int) (*domain.Product, error)
-	List() ([]*domain.Product, error)
+	List(page int, limit int) ([]*domain.Product, error)
 	Update(p domain.Product) (*domain.Product, error)
 	Delete(id int) error
 }
@@ -55,13 +55,19 @@ func (r *productRepo) Get(id int) (*domain.Product, error) {
 
 	return &product, nil
 }
-
-func (r *productRepo) List() ([]*domain.Product, error) {
-
+func (r *productRepo) List(page int, limit int) ([]*domain.Product, error) {
 	var list []*domain.Product
-	query := `SELECT id, name, price FROM products`
 
-	err := r.db.Select(&list, query)
+	// calculate offset
+	offset := (page - 1) * limit
+
+	query := `
+		SELECT id, name, price 
+		FROM products
+		LIMIT $1 OFFSET $2
+	`
+
+	err := r.db.Select(&list, query, limit, offset)
 	if err != nil {
 		return nil, err
 	}

@@ -14,6 +14,6 @@ func NewProductHandler(svc Service, middlewares *middlewares.Middlewares) *Produ
 	return &ProductHandler{
 		svc: svc,
 		middlewares: middlewares,
-		
+
 	}
 }

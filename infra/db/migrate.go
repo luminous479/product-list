@@ -14,10 +14,11 @@ func DBMigrate(db *sqlx.DB, dir string) error {
 	}
 
 	_, err := migrate.Exec(db.DB, "postgres", migrations, migrate.Up)
-
 	if err != nil {
+		fmt.Println("failed to migrate database", err)
 		return err
 	}
+
 	fmt.Println("successfully migrate database")
 	return nil
 }
